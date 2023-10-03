@@ -1,0 +1,70 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    12:24:07 06/08/2021 
+-- Design Name: 
+-- Module Name:    sevenSegment - Behavioral 
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
+--
+-- Dependencies: 
+--
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
+--
+----------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+
+--NB: NOTE THAT FOR THE 7SEG THE NUMBER OF INPUT ARE VARIED BASED ON THE DATAWIDTH OF THE SYSTEM YOU ARE DEALING WIDTH
+
+entity sevenSegment is
+	port(
+		A,B,C: in std_logic;
+		Sa,Sb,Sc,Sd,Se,Sf,Sg: out std_logic
+	);
+end sevenSegment;
+
+architecture Behavioral of sevenSegment is
+	signal num : std_logic_vector(2 downto 0);
+	signal output : std_logic_vector(6 downto 0);
+	
+begin
+	num <= A & B & C ;
+	Sa  <= output(6);
+	  Sb <= output(5);
+	 Sc <= output(4);
+	  Sd <= output(3);
+	 Se <= output(2);
+	  Sf <= output(1);
+	  Sg <= output(0);
+	  
+	with num select 
+		output <= "0000001" 	when "000", --0
+					 "1001111" 	when "001", --1
+					 "0010010" 	when "010", --2
+					 "0000110" 	when "011", --3
+					 "1001100" 	when "100", --4
+					 "0100100" 	when "101", --5
+					 "0100000" 	when "110", --6
+					 "0001111" 	when "111", --7
+					 "1111111"  when others;
+						
+	
+	
+
+end Behavioral;
