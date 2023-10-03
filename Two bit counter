@@ -1,0 +1,52 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    23:40:09 07/18/2021 
+-- Design Name: 
+-- Module Name:    x2_counter - Behavioral 
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
+--
+-- Dependencies: 
+--
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
+--
+----------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_unsigned.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity x2_counter is
+	port(
+		clk_250, count : in std_logic;
+		cnt : out std_logic_vector(1 downto 0)
+	);
+end x2_counter;
+
+architecture Behavioral of x2_counter is
+	signal cnt_sig : std_logic_vector(1 downto 0) := "00";
+begin
+	cnt_proc: process(clk_250)
+					begin
+						if(rising_edge(clk_250)) then
+							if(count = '1') then 
+								cnt_sig <= cnt_sig +1;
+							end if;
+						end if;
+					end process;
+	cnt <= cnt_sig;
+end Behavioral;
