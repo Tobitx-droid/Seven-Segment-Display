@@ -1,0 +1,126 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    00:11:08 07/19/2021 
+-- Design Name: 
+-- Module Name:    ss - Behavioral 
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
+--
+-- Dependencies: 
+--
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
+--
+----------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity ss is
+	port(
+		clk50m : in std_logic;
+		an_out : out std_logic_vector(3 downto 0);
+		ss_dec_out : out std_logic_vector(6 downto 0)
+	);
+end ss;
+
+architecture Behavioral of ss is
+	component anodeDecoder 
+		port(
+			selIn : in std_logic_vector(1 downto 0);
+			AnodeOut : out std_logic_vector(3 downto 0)
+		);
+	end component;
+	
+	component clk_div 
+		port(
+			clk_50m : in std_logic;
+			clk_250 : out std_logic
+		);
+	end component;
+	
+	component mux4 
+		port(
+			A,B,C,D : in std_logic_vector(2 downto 0);
+			mux_sel : in std_logic_vector(1 downto 0);
+			mux_out : out std_logic_vector(2 downto 0)
+		);
+	end component;
+	
+	component  x2_counter 
+		port(
+			clk_250, count : in std_logic;
+			cnt : out std_logic_vector(1 downto 0)
+		);
+	end component;
+	
+	component sevenSegment 
+		port(
+			A,B,C: in std_logic;
+			Sa,Sb,Sc,Sd,Se,Sf,Sg: out std_logic
+		);
+	end component;
+	signal clk250 : std_logic;
+	--signal mux : std_logic;
+	--signal ss_dec_out : std_logic_vector(6 downto 0);
+	signal dec_out : std_logic_vector(2 downto 0);
+	signal muxsel : std_logic_vector(1 downto 0);
+	
+begin
+	clk_div_map : clk_div port map(
+			clk_50m => clk50m,
+			clk_250 => clk250
+	);
+
+	
+	TwobitCnt : x2_counter port map(
+		clk_250 => clk250,
+		cnt     => muxsel,
+		count   => '1'
+	);
+	
+	mux4_map : mux4 port map(
+		A => "010",
+		B => "001",
+		C => "111",
+		D => "011",
+		mux_sel => muxsel,
+		 
+		mux_out => dec_out
+		
+		
+	);
+	
+	ss_dec_map : sevensegment 	port map(
+		A => dec_out(2),
+		B => dec_out(1),
+		C => dec_out(0),
+		Sa => ss_dec_out(6),
+		Sb => ss_dec_out(5),
+		Sc => ss_dec_out(4),
+		Sd => ss_dec_out(3),
+		Se => ss_dec_out(2),
+		Sf => ss_dec_out(1),
+		Sg => ss_dec_out(0)
+	
+	);
+	
+	anode_decoder : anodeDecoder port map(
+			selIn    => muxsel,
+			AnodeOut => an_out
+		);
+
+end Behavioral;
